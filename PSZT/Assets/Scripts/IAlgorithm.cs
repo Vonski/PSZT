@@ -9,5 +9,6 @@ namespace Rider
     interface IAlgorithm
     {
         double[] Optimize();
+        void SetProblem(IProblem problem);
     }
 }
