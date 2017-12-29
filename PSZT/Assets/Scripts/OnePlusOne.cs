@@ -19,6 +19,7 @@ namespace Rider
         IProblem problem;
         IProblem parentProblem;
         RandomGenerator randomGenerator;
+        int iterations=0;
 
         public OnePlusOne(int m, double c1, double c2, double sigma)
         {
@@ -78,7 +79,6 @@ namespace Rider
 
         public double[] Optimize()
         {
-            int iterations = 0;
             double[] child;
             while(sigma>min_sigma)
             {
