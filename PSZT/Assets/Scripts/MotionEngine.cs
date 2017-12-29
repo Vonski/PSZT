@@ -84,6 +84,18 @@ namespace Rider
             time = 0;
             v = new double[2] { 0, 0 };
         }
+
+        public IProblem Clone()
+        {
+            MotionEngine me = new MotionEngine();
+            me.point = new Point(this.point.getR(), this.point.GetAngle());
+            me.v = (double[])this.v.Clone();
+            me.a0 = (double[])this.a0.Clone();
+            me.B = (double[,])this.B.Clone();
+            me.c = (double[])this.c.Clone();
+            me.time = this.time;
+            return me;
+        }
     }
 }
 /*

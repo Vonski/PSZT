@@ -17,6 +17,7 @@ namespace Rider
         double chosenChildren;
         double fi;
         IProblem problem;
+        IProblem parentProblem;
         RandomGenerator randomGenerator;
 
         public OnePlusOne(int m, double c1, double c2, double sigma)
@@ -31,50 +32,42 @@ namespace Rider
         public void SetProblem(IProblem problem)
         {
             this.problem = problem;
+            parentProblem = problem.Clone();
+            while (parentProblem.Iterate()) ;
         }
 
         double[] GenerateChild(double[] parent)
         {
             double[] child = (double[])parent.Clone();
             for(int i=0; i<child.Length; ++i)
-            {
                 child[i] += randomGenerator.GenerateNormal(0, sigma);
-            }
             return child;
         }
 
-        double[] ChooseBetter(double[] parent, double[] child)
+        void ChooseBetter(double[] child)
         {
-            //testing parent
-            problem.SetParameters(parent);
-            bool check=true;
-            while(check)
-                check=problem.Iterate();
-            double parentValue = problem.AdaptationFunction();
-            Console.WriteLine("parent: "+parentValue);
+           
             //testing child
             problem.SetParameters(child);
-            check = true;
+            bool check = true;
             while(check)
                 check = problem.Iterate();
             double childValue = problem.AdaptationFunction();
-            Console.WriteLine("child: "+childValue);
+
+            //testing parent
+            double parentValue = parentProblem.AdaptationFunction();
 
             //choosing better
             if (childValue>parentValue)
             {
                 ++chosenChildren;
-
-                return child;
-            }
-            else
-            {
-                return parent;
+                parentProblem = problem.Clone();
+                Console.WriteLine(childValue);
             }
         }
         void ChangeSigma()
         {
-            fi = (double)(chosenChildren / m);
+            fi = chosenChildren / m;
             chosenChildren = 0;
 
             if (fi < 0.2)
@@ -86,25 +79,17 @@ namespace Rider
         public double[] Optimize()
         {
             int iterations = 0;
-            double[] parent = problem.GetParameters();
             double[] child;
             while(sigma>min_sigma)
             {
-                child = GenerateChild(parent);
-                parent = ChooseBetter(parent, child);
+                child = GenerateChild(parentProblem.GetParameters());
+                ChooseBetter(child);
 
                 ++iterations;
-                if(iterations==m)
-                {
+                if(iterations%m==0)
                     ChangeSigma();
-                    iterations = 0;
-                    Console.WriteLine("zmieniam sigme " + sigma);
-
-
-                }
             }
-            Console.WriteLine("juz");
-            return parent;
+            return parentProblem.GetParameters();
         }
 
     }
