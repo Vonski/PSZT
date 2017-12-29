@@ -2,31 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnityEngine;
+using System.Threading.Tasks;
 
-namespace Zuzel
+namespace Rider
 {
-    public class Program : MonoBehaviour
+    class Program
     {
-        
-        MotionEngine me = new MotionEngine();
-        public bool check = true;
-
-        void Start()
+        static void Main(string[] args)
         {
-            me.SetParameters(0, 115, 0, -1, -1, 0, -0.5, -0.27);
-        }
+            MotionEngine me = new MotionEngine();
+            double[] p = { 0, 115, 0, -1.5, -1, 0, -0.5, -0.27 };
+            me.SetParameters(p);
+            //bool check = true;
+            //while (check)
+            //{
+            //    check = me.Iterate();
+            //    Console.WriteLine("Time: " + Math.Round(me.GetTime(),3) + "\tPosition: R=" + Math.Round(me.GetPoint().getR(),2) + "\tDegrees=" + Math.Round(me.GetPoint().getDegrees(),2));
+            //}
 
-        void Update()
-        {
-            if (check)
-            {
-                check = me.Iterate();
-                //Debug.Log("Time: " + Math.Round(me.GetTime(), 3) + "\tPosition: R=" + Math.Round(me.GetPoint().getR(), 2) + "\tDegrees=" + Math.Round(me.GetPoint().getDegrees(), 2));
-                GetComponent<Transform>().position = new Vector2((float)me.GetPoint().getX()/10, (float)me.GetPoint().getY()/10);
-            }
-            //else
-                //Debug.Log("Angle: " + me.GetPoint().getDegrees());
+            OnePlusOne opo = new OnePlusOne(10, 0.82, 1.2, 1.0);
+            opo.SetProblem(me);
+            opo.Optimize();
+
+            //Console.WriteLine("Angle: " + me.GetPoint().getDegrees());
+            Console.ReadKey();
         }
     }
 }
