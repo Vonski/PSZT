@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Rider
 {
@@ -63,7 +63,7 @@ namespace Rider
             {
                 ++chosenChildren;
                 parentProblem = problem.Clone();
-                Console.WriteLine(childValue);
+                //Console.WriteLine(childValue);
             }
         }
         void ChangeSigma()
@@ -87,6 +87,22 @@ namespace Rider
 
                 ++iterations;
                 if(iterations%m==0)
+                    ChangeSigma();
+            }
+            return parentProblem.GetParameters();
+        }
+
+        public double[] Iterate(int n)
+        {
+            double[] child;
+            int next = iterations + n;
+            while (sigma > min_sigma && iterations<next)
+            {
+                child = GenerateChild(parentProblem.GetParameters());
+                ChooseBetter(child);
+                
+                ++iterations;
+                if (iterations % m == 0)
                     ChangeSigma();
             }
             return parentProblem.GetParameters();

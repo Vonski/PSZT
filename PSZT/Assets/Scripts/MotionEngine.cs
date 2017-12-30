@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Rider
 {
@@ -13,7 +12,7 @@ namespace Rider
         double[] a0 = new double[2]; //const acceleration radial,transversal
         double[,] B = new double[2,2]; //speed proportional acceleration [0,x] - radial, [1,x] - transversal, [x,0] - from radial speed, [x,1] from transversal speed
         double[] c = new double[2]; //radius proportional acceleration radial, transversal
-        static double dT = 0.001;
+        static double dT = 0.01;
         double time = 0;
         //public void SetParameters(double constRadial, double constTransversal, double radialFromRadial,  double radialFromTransversal, double transversalFromRadial, double transversalFromTransversal, double radiusRadial, double radiusTransversal)
         //{

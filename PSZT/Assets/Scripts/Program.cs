@@ -2,30 +2,62 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Rider
 {
-    class Program
+    class Program : MonoBehaviour
     {
-        static void Main(string[] args)
+        MotionEngine me;
+        OnePlusOne opo;
+        bool ready;
+
+        void Start()
         {
-            IProblem me = new MotionEngine();
-            double[] p = { 0, 115, 0, -1.5, -1, 0, -0.5, -0.27 };
-            me.SetParameters(p);
-            //bool check = true;
-            //while (check)
-            //{
-            //    check = me.Iterate();
-            //    Console.WriteLine("Time: " + Math.Round(me.GetTime(),3) + "\tPosition: R=" + Math.Round(me.GetPoint().getR(),2) + "\tDegrees=" + Math.Round(me.GetPoint().getDegrees(),2));
-            //}
-
-            IAlgorithm opo = new OnePlusOne(10, 0.82, 1.2, 1.0);
+            ready = true;
+            me = new MotionEngine();
+            me.SetParameters(new double[8] { 0, 115, 0, -1.5, -1, 0, -0.5, -0.27 });
+            opo = new OnePlusOne(10, 0.82, 1.2, 1.0);
             opo.SetProblem(me);
-            opo.Optimize();
-
-            //Console.WriteLine("Angle: " + me.GetPoint().getDegrees());
-            Console.ReadKey();
         }
+
+        public void Reset()
+        {
+            Debug.Log("no1");
+            ready = true;
+            me.SetParameters(new double[8] { 0, 115, 0, -1.5, -1, 0, -0.5, -0.27 });
+            me.Reset();
+            opo = new OnePlusOne(10, 0.82, 1.2, 1.0);
+            opo.SetProblem(me);
+        }
+
+        void Update()
+        {
+            if (ready)
+            {
+                me.SetParameters(opo.Iterate(100));
+                me.Reset();
+                ready = false;
+            }
+            else
+            {
+                if (me.Iterate())
+                    GetComponent<Transform>().position = new Vector2((float)me.GetPoint().getX() / 10, (float)me.GetPoint().getY() / 10);
+                else
+                    ready = true;
+            }
+        }
+
+        //static void Main(string[] args)
+        //{
+        //    IProblem me = new MotionEngine();
+        //    double[] p = { 0, 115, 0, -1.5, -1, 0, -0.5, -0.27 };
+        //    me.SetParameters(p);
+
+        //    IAlgorithm opo = new OnePlusOne(10, 0.82, 1.2, 1.0);
+        //    opo.SetProblem(me);
+        //    opo.Optimize();
+
+        //}
     }
 }
