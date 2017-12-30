@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-//using System.Threading.Tasks;
 using System.Collections;
 
 namespace Rider
@@ -54,7 +53,11 @@ namespace Rider
             OPOinstances.Last<OnePlusOne>().SetProblem(problem);
             if(bestSolution==null)
                 bestSolution = OPOinstances.First<OnePlusOne>().GetProblem().Clone();
+        }
 
+        public double[] GetParametersOfProblem(int n)
+        {
+            return OPOinstances[n].GetProblem().GetParameters();
         }
 
     }
