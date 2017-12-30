@@ -21,7 +21,7 @@ namespace Rider
         RandomGenerator randomGenerator;
         int iterations=0;
 
-        public OnePlusOne(int m, double c1, double c2, double sigma)
+        public OnePlusOne(double m, double c1, double c2, double sigma)
         {
             this.m = m;
             this.c1 = c1;
@@ -36,6 +36,12 @@ namespace Rider
             parentProblem = problem.Clone();
             while (parentProblem.Iterate()) ;
         }
+
+        public IProblem GetProblem()
+        {
+            return parentProblem;
+        }
+
 
         double[] GenerateChild(double[] parent)
         {
