@@ -50,7 +50,7 @@ namespace Rider
         public void SetProblem(IProblem problem)
         {
             OPOinstances.Add(new OnePlusOne(m, c1, c2, sigma));
-            OPOinstances.Last<OnePlusOne>().SetProblem(problem);
+            OPOinstances.Last<OnePlusOne>().SetProblem(problem.Clone());
             if(bestSolution==null)
                 bestSolution = OPOinstances.First<OnePlusOne>().GetProblem().Clone();
         }
