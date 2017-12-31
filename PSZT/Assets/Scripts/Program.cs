@@ -18,7 +18,7 @@ namespace Rider
 
         public void ChangeDelta()
         {
-            delta = default_dT * slider.value;
+            delta = slider.value;
         }
 
         void OnEnable()
@@ -59,8 +59,9 @@ namespace Rider
             {
                 if (me.GetTime() < end_time)
                 {
-                    me.dT = delta;
-                    me.Iterate();
+                    for(int i=0; i<delta; ++i)
+                        if(!me.Iterate())
+                            break;
                     GetComponent<Transform>().position = new Vector2((float)me.GetPoint().getX() / 10, (float)me.GetPoint().getY() / 10);
                 }
                 else if (inc)
