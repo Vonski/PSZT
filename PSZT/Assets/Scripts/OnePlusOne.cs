@@ -102,7 +102,7 @@ namespace Rider
         {
             double[] child;
             int next = iterations + n;
-            while (sigma > min_sigma && iterations<next)
+            while (sigma > min_sigma && iterations < next)
             {
                 child = GenerateChild(parentProblem.GetParameters());
                 ChooseBetter(child);

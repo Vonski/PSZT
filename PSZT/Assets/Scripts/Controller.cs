@@ -12,10 +12,10 @@ namespace Rider
 
         public OnePlusOneParallel opo;
         public Transform prefab;
-        Slider slider;
+        Slider slider, sliderIter;
         System.Random r;
         int number_of_lineages;
-        public int ready_lineages;
+        public int ready_lineages, number_of_iterations;
         public InputField input1, input2, input3, input4, input5;
 
         public delegate void ChangeEvent();
@@ -26,6 +26,7 @@ namespace Rider
             number_of_lineages = 10;
             r = new System.Random();
             slider = GameObject.Find("Slider").GetComponent<Slider>();
+            sliderIter = GameObject.Find("SliderIter").GetComponent<Slider>();
             Reset();
         }
 
@@ -38,6 +39,8 @@ namespace Rider
                 Destroy(clone);
             }
 
+            number_of_iterations = 1;
+            sliderIter.value = 0;
             number_of_lineages = input1.text != "" ? Int32.Parse(input1.text) : 10;
             double sigma = input2.text != "" ? Double.Parse(input2.text) : 1.0;
             int m = input3.text!="" ? Int32.Parse(input3.text) : 10;
@@ -66,11 +69,16 @@ namespace Rider
                 changeEvent();
         }
 
+        public void ChangeIterationStep()
+        {
+            number_of_iterations = (int)Math.Pow(10.0, (double)sliderIter.value);
+        }
+
         void Update()
         {
             if (ready_lineages == number_of_lineages)
             {
-                opo.Iterate(100);
+                opo.Iterate(number_of_iterations);
                 ready_lineages = 0;
                 if (changeEvent != null)
                     changeEvent();
