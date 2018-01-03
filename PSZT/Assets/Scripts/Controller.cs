@@ -49,7 +49,7 @@ namespace Rider
 
             for (int i = 0; i < number_of_lineages; ++i)
             {
-                me.SetParameters(new double[8] { 0, r.Next() % 115, 0, -r.Next() % 1.5, -r.Next() % 1, 0, -r.Next() % 1, -r.Next() % 0.5 });
+                me.SetParameters(new double[8] { (r.NextDouble()-0.5)*300, (r.NextDouble() - 0.5) * 300, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100 });
                 me.Reset();
                 opo.SetProblem(me);
                 Transform go = Instantiate(prefab, new Vector3(3.5f, 0, 0), Quaternion.identity);
