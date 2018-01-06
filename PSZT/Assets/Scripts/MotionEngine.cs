@@ -12,7 +12,7 @@ namespace Rider
         double[] a0 = new double[2]; //const acceleration radial,transversal
         double[,] B = new double[2,2]; //speed proportional acceleration [0,x] - radial, [1,x] - transversal, [x,0] - from radial speed, [x,1] from transversal speed
         double[] c = new double[2]; //radius proportional acceleration radial, transversal
-        public double dT = 0.01;
+        public double dT = 0.001;
         double time = 0;
         //public void SetParameters(double constRadial, double constTransversal, double radialFromRadial,  double radialFromTransversal, double transversalFromRadial, double transversalFromTransversal, double radiusRadial, double radiusTransversal)
         //{
@@ -41,7 +41,7 @@ namespace Rider
         public double[] GetParameters()
         {
             double[] parameters = new double[8];
-            parameters[0]=a0[0];
+            parameters[0] = a0[0];
             parameters[1] = a0[1];
             parameters[2] = B[0, 0];
             parameters[3] = B[0, 1];
@@ -63,17 +63,21 @@ namespace Rider
         public bool Iterate()
         {
             time += dT;
-            v[0] += (a0[0] * 4.67 + (v[0] * B[0, 0] * 16.67) + (v[1] * B[0, 1] * 1.067) + (point.getR() * c[0]*9.00) + (v[0]*v[0]+v[1]*v[1])/point.getR()) * dT;
-            v[1] += (a0[1] * 5.67 + (v[0] * B[1, 0] * 0.20) + (v[1] * B[1, 1] * 1.3) + (point.getR() * c[1]*2.0)) * dT;
+            v[0] += (a0[0] * 4.67 + (v[0] * B[0, 0] * 7.0) + (v[1] * B[0, 1] * 1.3) + (point.getR() * c[0] * 9.00) + (v[0]*v[0]+v[1]*v[1])/point.getR()) * dT;
+            v[1] += (a0[1] * 8.67 + (v[0] * B[1, 0] * 2.40) + (v[1] * B[1, 1] * 1.3) + (point.getR() * c[1] * 1.5)) * dT;
             point.SetAngle(point.GetAngle() + v[1] * dT / point.getR());
             point.SetR(point.getR() + v[0] * dT);
-            if (point.getR() < 30 || point.getR() > 40 || point.getDegrees()>3600.0) //last condition means that paremeters are so good that we can ride 10 loops! (eventually to change)
+            if (point.getR() < 30 || point.getR() > 40 || point.getDegrees() > 360.0 || point.getDegrees() < -30.0)
                 return false;
             return true;
         }
 
         public double AdaptationFunction()
         {
+            if (point.getDegrees() > 360)
+            {
+                return 360 + 100 / time;
+            }
             return point.getDegrees();
         }
 
