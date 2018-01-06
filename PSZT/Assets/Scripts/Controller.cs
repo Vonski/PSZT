@@ -52,7 +52,7 @@ namespace Rider
 
             for (int i = 0; i < number_of_lineages; ++i)
             {
-                me.SetParameters(new double[8] { (r.NextDouble()-0.5)*300, (r.NextDouble() - 0.5) * 300, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100 });
+                me.SetParameters(new double[8] { (r.NextDouble()-0.5)*100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100, (r.NextDouble() - 0.5) * 100 });
                 me.Reset();
                 opo.SetProblem(me);
                 Transform go = Instantiate(prefab, new Vector3(3.5f, 0, 0), Quaternion.identity);
@@ -73,12 +73,42 @@ namespace Rider
         {
             number_of_iterations = (int)Math.Pow(10.0, (double)sliderIter.value);
         }
+        double[] lastParams = new Double[8];
+        double[] paramChanges = new Double[8];
+        double[] avgParamChanges = new Double[8];
+        int counter = 1;
+        void WriteAndAnalyzeParameters(Double[] tab)
+        {
+            bool flag = false;
+            for (int i=0; i<tab.Length; ++i)
+            {
+                paramChanges[i] += Math.Abs(tab[i] - lastParams[i]);
+                if (tab[i]-lastParams[i] != 0)
+                {
+                    flag = true;
+                }
+                lastParams[i] = tab[i];
+                avgParamChanges[i] = paramChanges[i] / counter;
+            }
+            if (flag)
+            {
+                ++counter;
+            }
+            Debug.Log("Current params = " + String.Join("   ",
+             new List<double>(tab)
+             .ConvertAll(i => i.ToString())
+             .ToArray()));
+            Debug.Log("Avg param changes = " + String.Join("   ",
+             new List<double>(avgParamChanges)
+             .ConvertAll(i => i.ToString())
+             .ToArray()));
+        }
 
         void Update()
         {
             if (ready_lineages == number_of_lineages)
             {
-                opo.Iterate(number_of_iterations);
+                WriteAndAnalyzeParameters(opo.Iterate(number_of_iterations));
                 ready_lineages = 0;
                 if (changeEvent != null)
                     changeEvent();

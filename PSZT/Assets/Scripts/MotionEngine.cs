@@ -63,8 +63,8 @@ namespace Rider
         public bool Iterate()
         {
             time += dT;
-            v[0] += (a0[0] + (v[0] * B[0, 0]) + (v[1] * B[0, 1]) + (point.getR() * c[0]) + (v[0]*v[0]+v[1]*v[1])/point.getR()) * dT;
-            v[1] += (a0[1] + (v[0] * B[1, 0]) + (v[1] * B[1, 1]) + (point.getR() * c[1])) * dT;
+            v[0] += (a0[0] * 4.67 + (v[0] * B[0, 0] * 16.67) + (v[1] * B[0, 1] * 1.067) + (point.getR() * c[0]*9.00) + (v[0]*v[0]+v[1]*v[1])/point.getR()) * dT;
+            v[1] += (a0[1] * 5.67 + (v[0] * B[1, 0] * 0.20) + (v[1] * B[1, 1] * 1.3) + (point.getR() * c[1]*2.0)) * dT;
             point.SetAngle(point.GetAngle() + v[1] * dT / point.getR());
             point.SetR(point.getR() + v[0] * dT);
             if (point.getR() < 30 || point.getR() > 40 || point.getDegrees()>3600.0) //last condition means that paremeters are so good that we can ride 10 loops! (eventually to change)
